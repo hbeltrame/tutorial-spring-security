@@ -1,9 +1,18 @@
 package com.empresa.cursospringsecurity.models;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.empresa.cursospringsecurity.models.enums.Role;
 
 @Entity
 public class User {
@@ -14,12 +23,19 @@ public class User {
 	private String login;
 	private String password;
 	
-	public User() {}
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "ROLES")
+	private Set<Integer> roles = new HashSet<>();
+	
+	public User() {
+		addRole(Role.EMPLOYEE);
+	}
 	
 	public User(Integer id, String login, String password) {
 		this.id = id;
 		this.login = login;
 		this.password = password;
+		addRole(Role.EMPLOYEE);
 	}
 
 	public Integer getId() {
@@ -44,6 +60,14 @@ public class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Set<Role> getRoles() {
+		return roles.stream().map(x -> Role.toEnum(x)).collect(Collectors.toSet());
+	}
+	
+	public void addRole(Role role) {
+		roles.add(role.getCod());
 	}
 	
 	@Override
