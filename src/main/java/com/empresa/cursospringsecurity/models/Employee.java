@@ -1,5 +1,6 @@
 package com.empresa.cursospringsecurity.models;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,26 +16,34 @@ import javax.persistence.Id;
 import com.empresa.cursospringsecurity.models.enums.Role;
 
 @Entity
-public class User {
+public class Employee implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String login;
+	private String username;
 	private String password;
+	private String name;
+	private String email;
+	private String phone;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "ROLES")
 	private Set<Integer> roles = new HashSet<>();
 	
-	public User() {
+	public Employee() {
 		addRole(Role.EMPLOYEE);
 	}
 	
-	public User(Integer id, String login, String password) {
+	public Employee(Integer id, String username, String password, String name, String email, String phone) {
 		this.id = id;
-		this.login = login;
+		this.username = username;
 		this.password = password;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
 		addRole(Role.EMPLOYEE);
 	}
 
@@ -46,12 +55,12 @@ public class User {
 		this.id = id;
 	}
 	
-	public String getLogin() {
-		return login;
+	public String getUsername() {
+		return username;
 	}
 	
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	public String getPassword() {
@@ -62,6 +71,30 @@ public class User {
 		this.password = password;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public Set<Role> getRoles() {
 		return roles.stream().map(x -> Role.toEnum(x)).collect(Collectors.toSet());
 	}
@@ -86,7 +119,7 @@ public class User {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		Employee other = (Employee) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

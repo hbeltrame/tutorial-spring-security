@@ -8,15 +8,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.empresa.cursospringsecurity.models.User;
+import com.empresa.cursospringsecurity.models.Employee;
 import com.empresa.cursospringsecurity.models.enums.Role;
-import com.empresa.cursospringsecurity.repositories.UserRepository;
+import com.empresa.cursospringsecurity.repositories.EmployeeRepository;
 
 @SpringBootApplication
 public class CursoSpringSecurityApplication implements CommandLineRunner {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private EmployeeRepository userRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -27,11 +27,13 @@ public class CursoSpringSecurityApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		User u1 = new User(null, "Henrique Beltrame", encoder.encode("1234"));
-		User u2 = new User(null, "Fernanda Pereira", encoder.encode("1234"));
-		u2.addRole(Role.ADMIN);
+		Employee e1 = new Employee(null, "henrique.beltrame", encoder.encode("1234"), 
+				                   "Henrique", "henrique@email.com", "99999999");
+		Employee e2 = new Employee(null, "fernanda.pereira", encoder.encode("1234"), 
+				                   "Fernanda", "fernanda@email.com", "88888888");
+		e2.addRole(Role.ADMIN);
 		
-		userRepository.saveAll(Arrays.asList(u1, u2));
+		userRepository.saveAll(Arrays.asList(e1, e2));
 	}
 
 }
