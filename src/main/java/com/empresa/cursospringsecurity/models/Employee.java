@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.empresa.cursospringsecurity.models.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Employee implements Serializable {
@@ -24,6 +25,7 @@ public class Employee implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String username;
+	@JsonIgnore
 	private String password;
 	private String name;
 	private String email;

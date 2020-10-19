@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.empresa.cursospringsecurity.security.JWTAuthenticationFilter;
+import com.empresa.cursospringsecurity.security.JWTAuthorizationFilter;
 import com.empresa.cursospringsecurity.security.JWTUtil;
 
 @Configuration
@@ -29,8 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	// paths liberadas para acesso
 	private static final String[] PUBLIC_MATCHERS = {
-			"/h2-console/**",
-			"/login/**"
+			"/h2-console/**"
 	};
 	
 	// configurações HTTP
@@ -45,7 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PUBLIC_MATCHERS).permitAll()  // todas as paths no vetor serão permitidas
 			.anyRequest().authenticated();  // para todo o resto, exige autenticação
 		
+		// filtros para autenticação e autorização
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		
 		// assegura que o back-end não irá criar sessão de usuário
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -57,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 	
-	// configurações CORS
+	// configurações CORS (cross-origin é desabilitado por padrão)
 	@Bean
 	CorsConfigurationSource configurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
